@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from langchain_core import tool
+from langchain_core.tools import tool
 from langchain_ollama import ChatOllama
 from langchain_tavily import TavilySearch
 
