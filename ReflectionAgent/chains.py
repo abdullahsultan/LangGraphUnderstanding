@@ -24,6 +24,6 @@ generation_prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-llm = ChatOllama(model="qwen3:1.7b")
+llm = ChatOllama(model="qwen3:1.7b", reasoning =False)
 generate_chain = generation_prompt | llm
 reflection_chain = reflection_prompt | llm

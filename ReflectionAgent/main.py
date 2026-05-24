@@ -17,9 +17,11 @@ class MessageGraph(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
 
 def generation_node(state: MessageGraph):
+    print("Generating tweet...")
     return{"messages": [generate_chain.invoke({"messages": state["messages"]})]}
 
 def reflection_node(state: MessageGraph):
+    print("Reflecting on tweet...")
     res = reflection_chain.invoke({"messages": state["messages"]})
     return {"messages": [HumanMessage(content=res.content)]}
 
@@ -30,7 +32,8 @@ graph.add_node(REFLECT, reflection_node)
 graph.set_entry_point(GENERATE)
 
 def should_continue(state: MessageGraph):
-    if len(state) > 6:
+    print("Checking if we should continue reflecting...")
+    if len(state["messages"]) > 6:
         return END
     else:
         return REFLECT
@@ -43,6 +46,14 @@ app.get_graph().draw_mermaid_png(output_file_path="graph.png")
 
 def main():
     print("Hello from reflectionagent!")
+    input_msg = {"messages": [HumanMessage(content="""
+
+Write a tweet about skyrocketing RAM prices.
+
+""")]}
+    tweet = app.invoke(input_msg)
+    print("Final tweet:")
+    print(tweet["messages"][-1].content)
 
 
 if __name__ == "__main__":
